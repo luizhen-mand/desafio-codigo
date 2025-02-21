@@ -14,9 +14,9 @@ Para rodar o projeto localmente, siga os passos abaixo:
 
 ### 2. instale as dependencias com npm install
 
-### 3. rode o backend no docker
+### 3. rode o backend no `docker`
 
-### 4. rode o front com npm run dev
+### 4. rode o front com `npm run dev`
 
 
 ```bash
