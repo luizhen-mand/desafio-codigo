@@ -65,4 +65,27 @@ export class TaskRepository {
       },
     });
   }
+
+  async getByUserId(userId: number) {
+    return this.prisma.task.findMany({
+      where: {
+        createdBy: userId,
+        solved: false,
+      },
+      include: {
+        created_by: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+          },
+        },
+      },
+    });
+  }
+  
 }
+
+
+
+

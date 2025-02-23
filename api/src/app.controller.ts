@@ -3,13 +3,11 @@ import {
   Get,
   Post,
   Body,
-  UseGuards,
   Request,
   Response,
   Patch,
   Param,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { JwtAuthService } from './services/auth/index.service';
 import { TaskRepository } from './modules/task/repository/task.repository';
 import { UserRepository } from './modules/user/repository/user.repository';
@@ -41,7 +39,6 @@ export class AppController {
     return res.status(200).json({ token });
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Post('task')
   async addTask(
     @Body() task: any,
@@ -57,34 +54,40 @@ export class AppController {
     return res.status(200).json(result);
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Get('tasks')
   async getTasks(@Request() req, @Response() res): Promise<Response> {
-    console.log('Usuário autenticado:', req.user); // <-- Adicione esta linha
-    const result = await this.taskRepository.get();
+    const { userId } = req.user;
+  
+    if (!userId) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+  
+    const result = await this.taskRepository.getByUserId(userId);
+    
     return res.status(200).json(result);
   }
   
-  @UseGuards(AuthGuard('jwt'))
+  
   @Patch('task/:id')
-  async updateTask(
-    @Body() task: any,
-    @Request() req,
-    @Response() res,
-    @Param('id') taskId: string,
-  ): Promise<Response> {
-    const { userId: id } = req.user;
+async updateTask(
+  @Body() task: any,
+  @Request() req,
+  @Response() res,
+  @Param('id') taskId: string,
+): Promise<Response> {
+  const { userId } = req.user;
 
-    const taskExists = await this.taskRepository.findById(parseInt(taskId));
+  const taskExists = await this.taskRepository.findById(parseInt(taskId));
 
-    if (!taskExists) {
-      return res.status(404).json({ message: 'Tarefa nao encontrada' });
-    }
-
-    const result = await this.taskRepository.update(parseInt(id), {
-      ...task,
-    });
-
-    return res.json(result).status(200);
+  if (!taskExists) {
+    return res.status(404).json({ message: 'Tarefa não encontrada' });
   }
+
+  const result = await this.taskRepository.update(parseInt(taskId), {
+    ...task,
+  });
+
+  return res.status(200).json(result); 
+}
+
 }

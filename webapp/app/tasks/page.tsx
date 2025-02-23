@@ -20,6 +20,16 @@ export default function TasksPage() {
   const [taskInputs, setTaskInputs] = useState<{ [key: number]: string }>({})
   const router = useRouter();
 
+useEffect(() => {
+  const initialInputs = tasks.reduce((acc, task) => {
+    acc[task.id] = task.name;
+    return acc;
+  }, {} as { [key: string]: string });
+
+  setTaskInputs(initialInputs);
+}, [tasks]);
+
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     console.log('Token armazenado no localStorage:', token);
@@ -63,25 +73,40 @@ export default function TasksPage() {
   }, []);
 
   const addTask = async () => {
+    if (!newTask.trim() || !selectedDate) {
+      alert('Please enter both a task title and a scheduled date.');
+      return;
+    }
+  
     const task = {
       id: Date.now(),
       name: newTask,
       scheduled_for: selectedDate,
       solved: false,
-    }
-
-    await fetch('http://localhost:3003/task', {
+    };
+  
+    const response = await fetch('http://localhost:3003/task', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
       },
       body: JSON.stringify(task),
-    })
-    
-    alert('Tarefa adicionada com sucesso!')
-  }
-
+    });
+  
+    if (response.ok) {
+      const createdTask = await response.json();
+      setTasks((prevTasks) => [...prevTasks, createdTask]);
+  
+      setNewTask("");
+      setSelectedDate("");
+  
+      alert('Tarefa adicionada com sucesso!');
+    } else {
+      alert('Erro ao adicionar tarefa');
+    }
+  };
+  
   const toggleTask = async (taskId: number) => {
     const response = await fetch(`http://localhost:3003/task/${taskId}`, {
       method: 'PATCH',
@@ -174,23 +199,26 @@ export default function TasksPage() {
                 />
                 <div className="flex-1">
                   <div className="flex">
-                    <span className="text-gray-400">
+                    <span className="text-gray-400 font-bold text-lg">
                       ({task.created_by!.name})&nbsp;
                     </span>
                     <input
                       className={`font-medium focus:outline-none flex-grow ${task.solved ? "line-through text-gray-400" : "text-gray-900"} bg-transparent`}
                       type="text"
                       value={taskInputs[task.id] || ""}
+                      placeholder={task.name}
                       onChange={(e) => handleTaskInputChange(task.id, e.target.value)}
                       onBlur={() => updateTaskName(task.id)}
                       onKeyPress={(e) => {
-                        if (e.key === "Enter") {
-                          updateTaskName(task.id)
-                        }
-                      }}
-                    />
+                         if (e.key === "Enter") {
+                           updateTaskName(task.id);
+                          }
+                        }}
+                        />
                   </div>
-                  <p className="text-sm text-gray-500">{task.scheduled_for}</p>
+                  <p className="text-sm text-gray-500">
+                  {new Date(task.scheduled_for).toLocaleDateString('pt-BR')}
+                  </p>
                 </div>
               </div>
             ))}

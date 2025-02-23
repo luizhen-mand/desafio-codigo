@@ -13,20 +13,23 @@ export class JwtMiddleware implements NestMiddleware {
 
   async use(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers.authorization;
-    console.log('teste header', authHeader)
+    console.log('teste header', authHeader);
+
     if (!authHeader) {
       throw new UnauthorizedException('Authorization header is missing');
     }
 
     const token = authHeader.split(' ')[1];
-    console.log('token header', token)
+    console.log('token header', token);
+
     try {
       const decoded = this.jwtService.verify(token, { secret: 'secretKey' });
-      const jtwStrategy = new JwtStrategy();
-      jtwStrategy.validate(decoded);
+      const jwtStrategy = new JwtStrategy();
+      await jwtStrategy.validate(decoded);
+
       req.user = decoded;
-
-
+      
+      next();
     } catch (err) {
       throw new UnauthorizedException('Invalid token');
     }
