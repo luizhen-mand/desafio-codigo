@@ -66,9 +66,9 @@ Quando a edição de uma task era realizada, o frontend não estava atualizando 
 Após criar uma tarefa, ela só aparecia na interface após atualizar a página. Agora, a função fetchTasks() é chamada imediatamente após a criação da nova tarefa, garantindo que ela seja exibida sem necessidade de atualizar a página.
 
 11. Correção nas tasks "concluídas"
-As tasks marcadas como "concluídas" estavam desaparecendo da interface sem que o usuário soubesse se estavam sendo salvas corretamente. Agora, as tasks concluídas continuam visíveis na interface e são salvas corretamente no banco de dados.
+As tasks marcadas como "concluídas" estavam desaparecendo da interface sem que o usuário soubesse se estavam sendo salvas corretamente. Confirmei no banco, as tarefas concluídas estão sendo salvas sim, porém na tela elas não aparecem mais. Deixei como está, já que na minha visão não faz muito sentido ter várias tarefas concluídas na tela, apenas tomar cuidado pra limpar o banco sempre que possível já que se não fizer isso pode haver um número muito grande de tarefas concluídas nele
 
-12. Validação ao criar tarefas
+13. Validação ao criar tarefas
 Foi implementada uma validação para garantir que os usuários não possam criar tarefas sem descrição ou data. Se algum campo estiver vazio, a requisição não é enviada e o usuário recebe um alerta.
 
 
