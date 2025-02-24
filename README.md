@@ -33,6 +33,8 @@ Copiar
 Editar
 npm run dev
 
+OBS: caso der permissão negada, rode o comando `sudo chown -R $USER:$USER /home/luiz/Downloads/mandatask-challenge-main/webapp/.next`
+
 🛠️ Melhorias Implementadas
 Aqui estão as melhorias feitas para garantir que o sistema funcione corretamente:
 
