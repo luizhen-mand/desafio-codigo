@@ -1,4 +1,4 @@
-🚀 Desafio - Código
+# 🚀 **Desafio - Código**
 Desafio Fullstack
 
 📝 Sobre
@@ -21,9 +21,10 @@ Editar
 npm install
 
 3. Rode o backend no docker
+docker compose up -d --build
 Garanta que o backend esteja rodando no Docker para que a aplicação funcione corretamente.
 
-4. Rode o frontend
+5. Rode o frontend
 Execute o comando abaixo para iniciar o frontend:
 
 bash
