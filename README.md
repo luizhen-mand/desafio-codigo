@@ -23,6 +23,7 @@ npm install
 3. Rode o backend no docker
 `docker compose up -d --build`
 Garanta que o backend esteja rodando no Docker para que a aplicação funcione corretamente.
+`docker compose logs -f`
 
 5. Rode o frontend
 Execute o comando abaixo para iniciar o frontend:
