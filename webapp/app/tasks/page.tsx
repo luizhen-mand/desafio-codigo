@@ -2,6 +2,7 @@
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from "react"
 import { Calendar, Plus } from "lucide-react"
+import Swal from 'sweetalert2'
 
 interface Task {
   id: number
@@ -61,11 +62,11 @@ useEffect(() => {
         } else {
           const errorResponse = await response.text();
           console.log('Erro ao buscar tarefas', errorResponse);
-          alert('Erro ao buscar tarefas');
+          Swal.fire('Erro', 'Erro ao buscar tarefas', 'error')
         }
       } catch (error) {
         console.error('Erro na requisição:', error);
-        alert('Erro na requisição');
+        Swal.fire('Erro', 'Erro na requisição', 'error');
       }
     };
         
@@ -74,7 +75,7 @@ useEffect(() => {
 
   const addTask = async () => {
     if (!newTask.trim() || !selectedDate) {
-      alert('Please enter both a task title and a scheduled date.');
+      Swal.fire('Atenção', 'Por favor, preencha o título e a data da tarefa.', 'warning');
       return;
     }
   
@@ -101,9 +102,9 @@ useEffect(() => {
       setNewTask("");
       setSelectedDate("");
   
-      alert('Tarefa adicionada com sucesso!');
+      Swal.fire('Sucesso', 'Tarefa adicionada com sucesso!', 'success');
     } else {
-      alert('Erro ao adicionar tarefa');
+      Swal.fire('Erro', 'Erro ao adicionar tarefa', 'error');
     }
   };
   
@@ -122,7 +123,7 @@ useEffect(() => {
     if (response.ok) {
       setTasks(tasks.map((task) => (task.id === taskId ? { ...task, solved: !task.solved } : task)))
     } else {
-      alert('Falha ao atualizar a tarefa')
+      Swal.fire('Erro', 'Falha ao atualizar a tarefa', 'error');
     }
   }
 
@@ -146,7 +147,7 @@ useEffect(() => {
     if (response.ok) {
       setTasks(tasks.map((task) => (task.id === taskId ? { ...task, name: updatedName } : task)))
     } else {
-      alert('Falha ao atualizar o nome da tarefa')
+      Swal.fire('Erro', 'Falha ao atualizar o nome da tarefa', 'error');
     }
   }
 

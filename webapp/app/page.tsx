@@ -1,6 +1,7 @@
 'use client'
 import { useState } from "react"
 import { useRouter } from 'next/navigation'
+import Swal from 'sweetalert2'
 
 export default function Home() {
   const [email, setEmail] = useState("")
@@ -24,7 +25,7 @@ export default function Home() {
       localStorage.setItem('token', data.token)
       router.push('/tasks');
     } else {
-      alert('Login failed')
+      Swal.fire('Erro', 'Login failed', 'error');
     }
   }
 
